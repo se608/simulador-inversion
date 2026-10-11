@@ -28,7 +28,6 @@ jobs:
       - run: npm run lint
 
   deploy:
-    # Only deploy from main, and only if the checks passed.
     if: github.ref == 'refs/heads/main'
     needs: check
     runs-on: ubuntu-latest
@@ -42,7 +41,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: actions/configure-pages@v6
-      # Publish only the site/ folder, not tests or config.
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site

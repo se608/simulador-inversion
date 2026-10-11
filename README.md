@@ -1,6 +1,6 @@
 # Calculadora de interés compuesto
 
-https://se608.github.io/interes-compuesto/
+https://se608.github.io/simulador-inversion/
 
 A static calculator: monthly contributions, compound interest, and time to reach a goal. Everything runs in the browser; no data is stored or sent.
 
@@ -19,4 +19,4 @@ npm run lint
 npm run serve
 ```
 
-`404.html` uses absolute `/interes-compuesto/` paths (GitHub Pages serves it at any missing URL), so its home link and favicon only work on the deployed site.
+`404.html` uses absolute `/simulador-inversion/` paths (GitHub Pages serves it at any missing URL), so its home link and favicon only work on the deployed site.
