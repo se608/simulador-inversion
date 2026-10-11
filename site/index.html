@@ -24,12 +24,13 @@
       <p class="lead">Mira cuánto crece tu ahorro con aportes mensuales, y cuánto te toma llegar a una meta.</p>
 
       <!-- Not a <form>: results update live, so there is nothing to submit. -->
+      <!-- maxlength="15" on amounts (up to 999.999.999.999) keeps numbers within JavaScript's exact integer range. -->
       <div id="inputs" class="inputs">
         <div class="field">
           <label for="initial">Monto inicial</label>
           <div class="input-wrap">
             <span class="prefix" aria-hidden="true">$</span>
-            <input id="initial" class="amount" type="text" inputmode="numeric" autocomplete="off" value="1.000.000">
+            <input id="initial" class="amount" type="text" inputmode="numeric" autocomplete="off" maxlength="15" value="1.000.000">
           </div>
         </div>
 
@@ -37,7 +38,7 @@
           <label for="monthly">Aporte mensual</label>
           <div class="input-wrap">
             <span class="prefix" aria-hidden="true">$</span>
-            <input id="monthly" class="amount" type="text" inputmode="numeric" autocomplete="off" value="100.000">
+            <input id="monthly" class="amount" type="text" inputmode="numeric" autocomplete="off" maxlength="15" value="100.000">
           </div>
         </div>
 
@@ -59,7 +60,7 @@
           <label for="goal">Meta (opcional)</label>
           <div class="input-wrap">
             <span class="prefix" aria-hidden="true">$</span>
-            <input id="goal" class="amount" type="text" inputmode="numeric" autocomplete="off" value="50.000.000">
+            <input id="goal" class="amount" type="text" inputmode="numeric" autocomplete="off" maxlength="15" value="50.000.000">
           </div>
         </div>
       </div>
