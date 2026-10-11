@@ -18,3 +18,5 @@ npm test
 npm run lint
 npm run serve
 ```
+
+`npm run serve` mirrors the GitHub Pages URL structure: open http://localhost:3000/interes-compuesto/. Restart it after editing `404.html`, since that file is copied.
