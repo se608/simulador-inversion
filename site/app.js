@@ -1,10 +1,36 @@
 // Wires the inputs to the calculation logic in calc.js.
 import { simulate, monthsToGoal } from "./calc.js";
 import { parseAmount, formatAmount, digitsBefore, positionAfterDigits } from "./amount.js";
+import { languages, messages } from "./i18n.js";
 
 const inputs = document.getElementById("inputs");
 const errorBox = document.getElementById("error");
 const results = document.getElementById("results");
+
+// The chosen language is remembered in this browser only. Storage can be blocked
+// (e.g. private mode), so failures fall back to the browser language or Spanish.
+const languageStorageKey = "language";
+
+function initialLanguage() {
+  try {
+    const saved = localStorage.getItem(languageStorageKey);
+    if (languages.includes(saved)) {
+      return saved;
+    }
+  } catch {
+    // Ignore: fall back below.
+  }
+  if (navigator.language.toLowerCase().startsWith("pl")) {
+    return "pl";
+  }
+  return "es";
+}
+
+let language = initialLanguage();
+
+function text() {
+  return messages[language];
+}
 
 function format(value) {
   return "$" + formatAmount(Math.round(value));
@@ -41,13 +67,13 @@ function readInputs() {
   const goal = goalText === "" ? null : parseAmount(goalText);
 
   if (!(ratePercent >= -50 && ratePercent <= 50)) {
-    return { error: "La rentabilidad debe estar entre -50% y 50%.", fieldId: "rate" };
+    return { error: text().rateError, fieldId: "rate" };
   }
   if (!(Number.isInteger(years) && years >= 1 && years <= 80)) {
-    return { error: "El plazo debe ser un número entero de años, entre 1 y 80.", fieldId: "years" };
+    return { error: text().yearsError, fieldId: "years" };
   }
   if (goal !== null && !(goal > 0)) {
-    return { error: "La meta debe ser mayor que 0.", fieldId: "goal" };
+    return { error: text().goalError, fieldId: "goal" };
   }
 
   return {
@@ -84,9 +110,9 @@ function describeMonths(totalMonths) {
   const years = Math.floor(totalMonths / 12);
   const months = totalMonths % 12;
   const parts = [];
-  if (years > 0) parts.push(years === 1 ? "1 año" : years + " años");
-  if (months > 0) parts.push(months === 1 ? "1 mes" : months + " meses");
-  return parts.join(" y ");
+  if (years > 0) parts.push(text().years(years));
+  if (months > 0) parts.push(text().months(months));
+  return parts.join(text().and);
 }
 
 function renderGoal(values) {
@@ -99,11 +125,11 @@ function renderGoal(values) {
 
   const months = monthsToGoal(values);
   if (months === 0) {
-    goalResult.textContent = "Ya alcanzaste tu meta con el monto inicial.";
+    goalResult.textContent = text().goalAlreadyReached;
   } else if (months === null) {
-    goalResult.textContent = "Con estos números no alcanzas la meta de " + format(values.goal) + " en 100 años.";
+    goalResult.textContent = text().goalNotReached(format(values.goal));
   } else {
-    goalResult.textContent = "Alcanzas tu meta de " + format(values.goal) + " en " + describeMonths(months) + ".";
+    goalResult.textContent = text().goalReached(format(values.goal), describeMonths(months));
   }
   goalResult.hidden = false;
 }
@@ -121,9 +147,9 @@ function renderBar(last) {
   contributedSegment.style.width = contributedPercent + "%";
 
   if (last.interest > 0) {
-    bar.setAttribute("aria-label", contributedPercent + "% aportado, " + (100 - contributedPercent) + "% intereses");
+    bar.setAttribute("aria-label", text().barSplit(contributedPercent, 100 - contributedPercent));
   } else {
-    bar.setAttribute("aria-label", "100% aportado, sin intereses a favor");
+    bar.setAttribute("aria-label", text().barNoInterest);
   }
 }
 
@@ -162,8 +188,7 @@ function render() {
   const rows = simulate(values);
   const last = rows[rows.length - 1];
 
-  document.getElementById("hero-label").textContent =
-    "Saldo final en " + (values.years === 1 ? "1 año" : values.years + " años");
+  document.getElementById("hero-label").textContent = text().heroLabel(values.years);
   document.getElementById("final-balance").textContent = format(last.balance);
   document.getElementById("final-contributed").textContent = format(last.contributed);
   document.getElementById("final-interest").textContent = format(last.interest);
@@ -172,8 +197,7 @@ function render() {
   renderGoal(values);
   renderTable(rows);
 
-  document.getElementById("announce").textContent =
-    "Saldo final " + format(last.balance) + ", de los cuales " + format(last.interest) + " son intereses.";
+  document.getElementById("announce").textContent = text().announce(format(last.balance), format(last.interest));
 }
 
 // Adds thousands separators while typing, keeping the cursor after the same digit.
@@ -191,6 +215,36 @@ function reformatAmountInput(input) {
   input.setSelectionRange(position, position);
 }
 
+// Swaps every static text marked with data-i18n, and marks the active language button.
+function applyLanguage() {
+  document.documentElement.lang = language;
+  document.title = text().pageTitle;
+  for (const element of document.querySelectorAll("[data-i18n]")) {
+    element.textContent = text()[element.dataset.i18n];
+  }
+  for (const element of document.querySelectorAll("[data-i18n-label]")) {
+    element.setAttribute("aria-label", text()[element.dataset.i18nLabel]);
+  }
+  for (const button of document.querySelectorAll("[data-lang]")) {
+    button.setAttribute("aria-pressed", String(button.dataset.lang === language));
+  }
+}
+
+document.querySelector(".lang-switch").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-lang]");
+  if (!button) {
+    return;
+  }
+  language = button.dataset.lang;
+  try {
+    localStorage.setItem(languageStorageKey, language);
+  } catch {
+    // Ignore: the choice just won't be remembered next time.
+  }
+  applyLanguage();
+  render();
+});
+
 inputs.addEventListener("input", (event) => {
   if (event.target.classList.contains("amount")) {
     reformatAmountInput(event.target);
@@ -198,4 +252,5 @@ inputs.addEventListener("input", (event) => {
   render();
 });
 
+applyLanguage();
 render();
