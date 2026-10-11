@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://se608.github.io/interes-compuesto/sitemap.xml

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora de interés compuesto</title>
+    <meta name="description" content="Calcula cuánto crece tu ahorro con aportes mensuales e interés compuesto, y cuánto tiempo te toma llegar a una meta.">
+    <link rel="canonical" href="https://se608.github.io/interes-compuesto/">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#1f6feb">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Calculadora de interés compuesto">
+    <meta property="og:description" content="Calcula cuánto crece tu ahorro con aportes mensuales e interés compuesto.">
+    <meta property="og:url" content="https://se608.github.io/interes-compuesto/">
+    <meta property="og:locale" content="es_CL">
+
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Calculadora de interés compuesto</h1>
+      <p class="lead">Mira cuánto crece tu ahorro con aportes mensuales, y cuánto te toma llegar a una meta.</p>
+
+      <form id="form" novalidate>
+        <label for="initial">Monto inicial</label>
+        <input id="initial" name="initial" type="number" inputmode="numeric" min="0" step="any" value="1000000">
+
+        <label for="monthly">Aporte mensual</label>
+        <input id="monthly" name="monthly" type="number" inputmode="numeric" min="0" step="any" value="100000">
+
+        <label for="rate">Rentabilidad anual (%)</label>
+        <input id="rate" name="rate" type="number" inputmode="decimal" min="-50" max="50" step="any" value="6">
+
+        <label for="years">Años</label>
+        <input id="years" name="years" type="number" inputmode="numeric" min="1" max="80" step="1" value="20">
+
+        <label for="goal">Meta (opcional)</label>
+        <input id="goal" name="goal" type="number" inputmode="numeric" min="0" step="any" value="50000000">
+
+        <button type="submit">Calcular</button>
+      </form>
+
+      <section aria-live="polite">
+        <p id="error" class="error" hidden></p>
+
+        <div id="results">
+          <dl class="summary">
+            <div>
+              <dt>Saldo final</dt>
+              <dd id="final-balance">-</dd>
+            </div>
+            <div>
+              <dt>Total aportado</dt>
+              <dd id="final-contributed">-</dd>
+            </div>
+            <div>
+              <dt>Ganado por intereses</dt>
+              <dd id="final-interest">-</dd>
+            </div>
+          </dl>
+
+          <p id="goal-result"></p>
+
+          <table>
+            <caption>Evolución año a año</caption>
+            <thead>
+              <tr>
+                <th scope="col">Año</th>
+                <th scope="col">Aportado</th>
+                <th scope="col">Intereses</th>
+                <th scope="col">Saldo</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          Usa una rentabilidad <strong>real</strong> (descontando inflación) para ver los montos en pesos de hoy.
+          Los cálculos son referenciales y no constituyen asesoría financiera; las rentabilidades pasadas no garantizan las futuras.
+        </p>
+        <p>Todo se calcula en tu navegador. No se guarda ni se envía ningún dato.</p>
+      </footer>
+    </main>
+  </body>
+</html>
