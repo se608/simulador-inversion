@@ -23,66 +23,92 @@
       <h1>Calculadora de interés compuesto</h1>
       <p class="lead">Mira cuánto crece tu ahorro con aportes mensuales, y cuánto te toma llegar a una meta.</p>
 
-      <form id="form" novalidate>
-        <label for="initial">Monto inicial</label>
-        <input id="initial" name="initial" type="number" inputmode="numeric" min="0" step="any" value="1000000">
-
-        <label for="monthly">Aporte mensual</label>
-        <input id="monthly" name="monthly" type="number" inputmode="numeric" min="0" step="any" value="100000">
-
-        <label for="rate">Rentabilidad anual (%)</label>
-        <input id="rate" name="rate" type="number" inputmode="decimal" min="-50" max="50" step="any" value="6">
-
-        <label for="years">Años</label>
-        <input id="years" name="years" type="number" inputmode="numeric" min="1" max="80" step="1" value="20">
-
-        <label for="goal">Meta (opcional)</label>
-        <input id="goal" name="goal" type="number" inputmode="numeric" min="0" step="any" value="50000000">
-
-        <button type="submit">Calcular</button>
-      </form>
-
-      <section aria-live="polite">
-        <p id="error" class="error" hidden></p>
-
-        <div id="results">
-          <dl class="summary">
-            <div>
-              <dt>Saldo final</dt>
-              <dd id="final-balance">-</dd>
-            </div>
-            <div>
-              <dt>Total aportado</dt>
-              <dd id="final-contributed">-</dd>
-            </div>
-            <div>
-              <dt>Ganado por intereses</dt>
-              <dd id="final-interest">-</dd>
-            </div>
-          </dl>
-
-          <p id="goal-result"></p>
-
-          <table>
-            <caption>Evolución año a año</caption>
-            <thead>
-              <tr>
-                <th scope="col">Año</th>
-                <th scope="col">Aportado</th>
-                <th scope="col">Intereses</th>
-                <th scope="col">Saldo</th>
-              </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-          </table>
+      <!-- Not a <form>: results update live, so there is nothing to submit. -->
+      <div id="inputs" class="inputs">
+        <div class="field">
+          <label for="initial">Monto inicial</label>
+          <div class="input-wrap">
+            <span class="prefix" aria-hidden="true">$</span>
+            <input id="initial" class="amount" type="text" inputmode="numeric" autocomplete="off" value="1.000.000">
+          </div>
         </div>
+
+        <div class="field">
+          <label for="monthly">Aporte mensual</label>
+          <div class="input-wrap">
+            <span class="prefix" aria-hidden="true">$</span>
+            <input id="monthly" class="amount" type="text" inputmode="numeric" autocomplete="off" value="100.000">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="rate">Rentabilidad anual</label>
+          <div class="input-wrap">
+            <input id="rate" type="number" inputmode="decimal" min="-50" max="50" step="any" value="4" aria-describedby="rate-help" data-help="rate-help">
+            <span class="suffix" aria-hidden="true">%</span>
+          </div>
+          <p id="rate-help" class="help">Usa rentabilidad real (sin inflación), p. ej. 3–5%.</p>
+        </div>
+
+        <div class="field">
+          <label for="years">Plazo (años)</label>
+          <input id="years" type="number" inputmode="numeric" min="1" max="80" step="1" value="20">
+        </div>
+
+        <div class="field field-wide">
+          <label for="goal">Meta (opcional)</label>
+          <div class="input-wrap">
+            <span class="prefix" aria-hidden="true">$</span>
+            <input id="goal" class="amount" type="text" inputmode="numeric" autocomplete="off" value="50.000.000">
+          </div>
+        </div>
+      </div>
+
+      <p id="error" class="error" role="alert" hidden></p>
+
+      <section id="results" class="results">
+        <div class="hero">
+          <p id="hero-label" class="hero-label">Saldo final</p>
+          <p id="final-balance" class="hero-value">-</p>
+          <p class="hero-detail">
+            Aportaste <strong id="final-contributed">-</strong> · Intereses <strong id="final-interest">-</strong>
+          </p>
+
+          <div id="bar" class="bar" role="img" aria-label="">
+            <div id="bar-contributed" class="bar-contributed"></div>
+            <div class="bar-interest"></div>
+          </div>
+          <ul class="legend" aria-hidden="true">
+            <li><span class="dot dot-contributed"></span>Aportado</li>
+            <li><span class="dot dot-interest"></span>Intereses</li>
+          </ul>
+        </div>
+
+        <p id="goal-result" class="callout" hidden></p>
+
+        <details>
+          <summary>Ver evolución año a año</summary>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Año</th>
+                  <th scope="col">Aportado</th>
+                  <th scope="col">Intereses</th>
+                  <th scope="col">Saldo</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </details>
       </section>
 
+      <!-- One short sentence for screen readers, instead of re-reading the whole table. -->
+      <p id="announce" class="visually-hidden" aria-live="polite"></p>
+
       <footer>
-        <p>
-          Usa una rentabilidad <strong>real</strong> (descontando inflación) para ver los montos en pesos de hoy.
-          Los cálculos son referenciales y no constituyen asesoría financiera; las rentabilidades pasadas no garantizan las futuras.
-        </p>
+        <p>Los cálculos son referenciales y no constituyen asesoría financiera; las rentabilidades pasadas no garantizan las futuras.</p>
         <p>Todo se calcula en tu navegador. No se guarda ni se envía ningún dato.</p>
       </footer>
     </main>

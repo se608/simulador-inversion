@@ -14,7 +14,7 @@ A static calculator: monthly contributions, compound interest, and time to reach
 
 ```sh
 npm ci
-npm test       # calculation tests
-npm run lint   # HTML validation
-npm run serve  # local server at http://localhost:3000
+npm test
+npm run lint
+npm run serve
 ```
