@@ -9,6 +9,6 @@
   },
   "devDependencies": {
     "html-validate": "11.16.0",
-    "serve": "14.2.4"
+    "serve": "14.2.6"
   }
 }
