@@ -5,9 +5,10 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "lint": "html-validate site/",
-    "serve": "mkdir -p .dev && ln -sfn ../site .dev/interes-compuesto && rm -f .dev/404.html && cp site/404.html .dev/404.html && npx --yes serve@14.2.4 --symlinks .dev"
+    "serve": "serve site"
   },
   "devDependencies": {
-    "html-validate": "11.16.0"
+    "html-validate": "11.16.0",
+    "serve": "14.2.4"
   }
 }
