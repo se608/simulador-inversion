@@ -20,6 +20,8 @@ npm run lint
 npm run serve
 ```
 
+`site/og.png` is the preview image for shared links. Its source is `og/card.html`; after editing it, run `npm run og` (needs Google Chrome, macOS path) and commit the new PNG.
+
 `404.html` uses absolute `/simulador-inversion/` paths (GitHub Pages serves it at any missing URL), so its home link and favicon only work on the deployed site.
 
 The language switch runs in the browser, so the meta description and `og:` tags stay in Spanish: crawlers and link previews don't run JS. Translating them properly would need one URL per language (e.g. `/pl/` with `hreflang`).
