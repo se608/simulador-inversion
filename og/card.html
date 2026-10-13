@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+  Source for site/og.png, the preview image shown when the link is shared
+  (WhatsApp, LinkedIn, Slack...). Regenerate it with `npm run og`.
+  Size is fixed at 1200x630, the standard Open Graph image size.
+-->
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>og:image</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #0d1117;
+        color: #e6edf3;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+
+      .card {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 56px;
+        height: 100%;
+        padding: 72px;
+      }
+
+      .text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .url {
+        font-size: 24px;
+        color: #4493f8;
+        font-weight: 600;
+      }
+
+      h1 {
+        margin: 32px 0 20px;
+        font-size: 64px;
+        line-height: 1.05;
+        letter-spacing: -1px;
+      }
+
+      .tagline {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.35;
+        color: #9198a1;
+      }
+
+      .legend {
+        display: flex;
+        gap: 28px;
+        margin-top: auto;
+        font-size: 22px;
+        color: #9198a1;
+      }
+
+      .dot {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 10px;
+        border-radius: 50%;
+        vertical-align: -1px;
+      }
+
+      .chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        height: 100%;
+      }
+
+      .bar {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px 4px 0 0;
+        overflow: hidden;
+      }
+
+      .interest {
+        background: #4493f8;
+      }
+
+      .contributed {
+        background: #656c76;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="text">
+        <div class="url">se608.github.io/simulador-inversion</div>
+        <h1>Calculadora de interés compuesto</h1>
+        <p class="tagline">Cuánto crece tu ahorro con aportes mensuales, y cuándo llegas a tu meta.</p>
+        <div class="legend">
+          <span><span class="dot contributed"></span>Aportado</span>
+          <span><span class="dot interest"></span>Intereses</span>
+        </div>
+      </div>
+      <div id="chart" class="chart"></div>
+    </div>
+
+    <script>
+      // Same defaults as the calculator: $1.000.000 initial, $100.000 monthly, 4% per year, 20 years.
+      // Inline (not imported from site/calc.js) so this file also works when opened from disk.
+      const monthlyRate = Math.pow(1.04, 1 / 12) - 1;
+      let balance = 1000000;
+      let contributed = 1000000;
+      const years = [];
+
+      for (let year = 1; year <= 20; year++) {
+        for (let month = 1; month <= 12; month++) {
+          balance = balance * (1 + monthlyRate) + 100000;
+          contributed = contributed + 100000;
+        }
+        years.push({ balance: balance, contributed: contributed });
+      }
+
+      const max = years[years.length - 1].balance;
+      const chart = document.getElementById("chart");
+
+      for (const year of years) {
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.style.height = (year.balance / max) * 100 + "%";
+
+        const interest = document.createElement("div");
+        interest.className = "interest";
+        interest.style.flex = String(year.balance - year.contributed);
+
+        const contributedPart = document.createElement("div");
+        contributedPart.className = "contributed";
+        contributedPart.style.flex = String(year.contributed);
+
+        bar.appendChild(interest);
+        bar.appendChild(contributedPart);
+        chart.appendChild(bar);
+      }
+    </script>
+  </body>
+</html>
